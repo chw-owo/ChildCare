@@ -43,20 +43,20 @@
         <div class="input-group-prepend">
             <div class="input-group-text" id="btnGroupAddon">제목</div>
         </div>
-        <span type="text" class="form-control">~~~~~~모집합니다~</span>
+        <span type="text" class="form-control">{{title}}</span>
         <div class="input-group mb-3">
             <div>
                 <span class="input-group-text" id="basic-addon2">지역</span>
             </div>
-            <span class="form-control">서울</span>
+            <span class="form-control">{{location}}</span>
             <div>
                 <span class="input-group-text" id="basic-addon3">모집인원</span>
             </div>
-            <span class="form-control">(4/5)명</span>
+            <span class="form-control">({{cur_cnt}}/{{population}})명</span>
 
         </div>
         <div class="card-body">
-            <p class="card-text">오전 10시부터 오후 4시까지 아이돌봄 합니다.</p>
+            <p class="card-text">{{desc}}</p>
         </div>
     </div>
 </div>
