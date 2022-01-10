@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Title</title>
+
+    <!-- Bulma CSS 링크 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+<style>
+    .hero{
+        padding-bottom: 50px;
+    }
+    .wrap{
+        padding-top: 50px;
+    }
+    .field{
+        padding-top: 5px;
+    }
+
+
+</style>
+</head>
+<body>
+
+    <section class="hero is-warning is-bold">
+      <div class="hero-body">
+        <p class="title">
+          Childcare Together
+        </p>
+        <p class="subtitle">
+          육아 품앗이 매칭 플랫폼
+        </p>
+      </div>
+    </section>
+
+    <div class="wrap">
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Title</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control is-expanded has-icons-left">
+                <input class="input" type="text" placeholder="Name">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control is-expanded has-icons-left has-icons-right">
+                <input class="input" type="email" placeholder="Email">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                <span class="icon is-small is-right">
+                  <i class="fas fa-check"></i>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label"></div>
+          <div class="field-body">
+            <div class="field is-expanded">
+              <div class="field has-addons">
+                <p class="control">
+                  <a class="button is-static">
+                    +44
+                  </a>
+                </p>
+                <p class="control is-expanded">
+                  <input class="input" type="tel" placeholder="Your phone number">
+                </p>
+              </div>
+              <p class="help">Do not enter the first zero</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Population</label>
+          </div>
+          <div class="field-body">
+            <div class="field is-narrow">
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select>
+                      <option selected>----인원을 선택하세요----</option>
+                      <option value = "2">2</option>
+                      <option value = "3">3</option>
+                      <option value = "4">4</option>
+                      <option value = "5">5</option>
+                      <option value = "6">6</option>
+                      <option value = "7">7</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Age/label>
+          </div>
+          <div class="field-body">
+            <div class="field is-narrow">
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select>
+                      <option selected>----아이의 나이를 선택하세요----</option>
+                      <option value = "1">1</option>
+                      <option value = "2">2</option>
+                      <option value = "3">3</option>
+                      <option value = "4">4</option>
+                      <option value = "5">5</option>
+                      <option value = "6">6</option>
+                      <option value = "7">7</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">지역</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input class="input is-danger" type="text" placeholder="도로명 주소로 입력하세요. (ex: oo시 oo구 oo동 oo로 oo번길)">
+              </div>
+              <p class="help is-danger">
+                This field is required
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Detail</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <textarea class="textarea"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <!-- Left empty for spacing -->
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <button class="button is-warning">
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
