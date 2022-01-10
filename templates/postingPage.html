@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Title</title>
+
+    <!-- Bulma CSS 링크 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!--google font 링크-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nunito&family=Ubuntu:ital,wght@0,300;1,400&display=swap" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <style>
+        * {
+            font-family: 'Gowun Dodum';
+        }
+        .hero{
+            padding-bottom: 50px;
+        }
+        .container{
+            padding-top: 50px;
+            padding-right: 200px;
+        }
+        .field{
+            padding-top: 5px;
+        }
+        .title-box
+        {
+            padding-left: 50px;
+        }
+        .title-id{
+            position: fixed;
+            right: 100px;
+            top: 20px;
+
+        }
+
+    </style>
+</head>
+
+<script>
+        function save_post(){
+
+            //detailPage 수정하기 onclick시에도 호출
+
+            let title = $("#title").val()
+            let phone= $("#phone").val()
+            let population= $("#population").val()
+            let age= $("#age").val()
+            let location= $("#location").val()
+            let details= $("#details").val()
+            alert(title)
+            alert(details)
+            alert(population)
+            alert(age)
+            alert(phone)
+
+
+            $.ajax({
+                type:"POST",
+                url:'/postingPage',
+                data:{
+                    title_give: title,
+                    phone_give: phone,
+                    population_give: population,
+                    age_give: age,
+                    location_give: location,
+                    details_give: details
+                },
+                success: function(response){
+                    alert(response["msg"])
+                    window.location.href="/detailPage"
+                }
+            })
+        }
+{#        function delete_post(){
+            $.ajax({
+                type:"DELETE",
+                url:'/postingPage',
+                data:{
+                    post_give: "",
+                },
+                success: function(response){
+                    alert(response["msg"])
+                    window.location.href="/mainPage"
+                }
+            });
+        }#}
+
+</script>
+<body>
+
+    <section class="hero is-warning is-bold">
+      <div class = "title-id">
+          안녕하세요 {{ id }}님!
+      </div>
+      <div class="hero-body">
+          <div class="title-box">
+            <p class="title">
+              Childcare Together
+            </p>
+            <p class="subtitle">
+              육아 품앗이 매칭 플랫폼
+            </p>
+          </div>
+      </div>
+    </section>
+
+    <div class="container">
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label" >글 제목</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control is-expanded has-icons-left">
+                <input class="input" type="text" id="title">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label">전화번호</div>
+              <div class="field-body">
+                <div class="field is-expanded">
+                  <div class="field has-addons">
+                    <p class="control is-expanded">
+                      <input class="input" id="phone" type="text" placeholder="ex: 000-0000-0000">
+                    </p>
+                  </div>
+                </div>
+              </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">인원</label>
+          </div>
+          <div class="field-body">
+            <div class="field is-narrow">
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select id="population" style="font-family: 'Nunito', 'Gowun Dodum';">
+                      <option value="">----인원을 선택하세요----</option>
+                      <option value = "2">2</option>
+                      <option value = "3">3</option>
+                      <option value = "4">4</option>
+                      <option value = "5">5</option>
+                      <option value = "6">6</option>
+                      <option value = "7">7</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label" > 나이 </label>
+          </div>
+          <div class="field-body">
+            <div class="field is-narrow">
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select id="age" style = "font-family: 'Nunito', 'Gowun Dodum';">
+                      <option value="">----아이의 나이를 선택하세요----</option>
+                      <option value = "1">1</option>
+                      <option value = "2">2</option>
+                      <option value = "3">3</option>
+                      <option value = "4">4</option>
+                      <option value = "5">5</option>
+                      <option value = "6">6</option>
+                      <option value = "7">7</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">지역</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input class="input" id="location" type="text" placeholder="도로명 주소로 입력하세요. (ex: oo시 oo구 oo동 oo로 oo번길)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">본문</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <textarea class="textarea" id="details"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <!-- Left empty for spacing -->
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <button class="button is-warning" onclick="save_post()">
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
