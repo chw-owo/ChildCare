@@ -18,9 +18,12 @@ def home():
 def post():
     return render_template('postingPage.html')
 
-@app.route('/detailPage')
-def detail():
-    return render_template('detailPage.html')
+@app.route('/detail', methods=['GET'])
+def read_reviews():
+    board_title = request.args.get('title')
+    board_info = db.childcare.find_one({'title': '@@아파트 아이 품앗이'}, {'_id': False})
+
+    return render_template('detail.html', title=board_info['title'],location=board_info['location'], cur_cnt=board_info['cur_cnt'], population=board_info['population'],desc=board_info['desc'])
 
 
 @app.route('/postingPage', methods=['POST'])
