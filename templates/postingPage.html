@@ -56,12 +56,6 @@
             let age= $("#age").val()
             let location= $("#location").val()
             let details= $("#details").val()
-            alert(title)
-            alert(details)
-            alert(population)
-            alert(age)
-            alert(phone)
-
 
             $.ajax({
                 type:"POST",
@@ -76,7 +70,7 @@
                 },
                 success: function(response){
                     alert(response["msg"])
-                    window.location.href="/detailPage"
+                    window.location.href="/detail"
                 }
             })
         }
