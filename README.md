@@ -14,4 +14,13 @@
 
 ## 3. 와이어 프레임
 
+![1](https://user-images.githubusercontent.com/45589210/148733781-928d8d67-fe87-4237-912f-091bac6fa061.jpg)
+![2](https://user-images.githubusercontent.com/45589210/148733783-07e9ede5-9359-4bb3-bfa3-1ea8f788ec2b.jpg)
+![3](https://user-images.githubusercontent.com/45589210/148733787-df431877-689a-4f52-b45d-d2386022ab98.jpg)
+![4](https://user-images.githubusercontent.com/45589210/148733788-b2d68498-9c2a-4402-bbf7-d5e0604b8074.jpg)
+![5](https://user-images.githubusercontent.com/45589210/148733792-d5591633-b021-4ca5-9dda-21888991f09e.jpg)
+
+
 ## 4. API 설계
+
+![6](https://user-images.githubusercontent.com/45589210/148733888-caa9f58e-0713-4784-bd79-d35f824abb6f.jpg)
