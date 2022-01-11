@@ -20,11 +20,16 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nunito&family=Ubuntu:ital,wght@0,300;1,400&display=swap"
               rel="stylesheet">
+        <!-- 커스텀 MyStyle -->
+{#        <link href="{{ url_for('static', filename='MyStyle.css') }}" rel="stylesheet">#}
 
+        </style>
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
         <style>
-            body
-            {
+            body {
                 min-height: 100vh;
             }
 
@@ -42,8 +47,7 @@
 
             }
 
-            .titleMargin
-            {
+            .titleMargin {
                 margin: 150px 550px 0px 550px;
             }
 
@@ -72,10 +76,6 @@
                 color: gray;
             }
         </style>
-        <!-- JS -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
         <script>
             // {% if msg %}
             //     alert("{{ msg }}")
@@ -188,6 +188,9 @@
                 $("#help-password-login").text("")
                 $("#input-username").val("");
                 $("#input-password").val("");
+                $("#input-password2").val("");
+
+                passwordCheck();
 
 
             }
@@ -246,9 +249,13 @@
             {
 
                 let password = $("#input-password").val()
-
-                if (!is_password(password) && !"")
+               if (password == "")
                 {
+                    $("#help-password").text("영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도사용 가능합니다.")
+                        .removeClass("is-safe").removeClass("is-danger")
+                    $("#input-password").focus()
+                    return;
+                } else if (!is_password(password)) {
                     $("#help-password").text("비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
                     $("#input-password").focus()
                     return
@@ -263,7 +270,12 @@
                 let password = $("#input-password").val()
                 let password2 = $("#input-password2").val()
 
-                if (password2 != password) {
+               if (password2 == "") {
+                    $("#help-password2").text("비밀번호를 다시 한 번 입력해주세요.")
+                        .removeClass("is-safe").removeClass("is-danger")
+                    $("#input-password2").focus()
+                    return;
+                } else if (password2 != password) {
                     $("#help-password2").text("비밀번호가 일치하지 않습니다.").removeClass("is-safe").addClass("is-danger")
                     $("#input-password2").focus()
                     return;
