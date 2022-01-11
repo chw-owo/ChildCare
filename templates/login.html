@@ -13,12 +13,16 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
         <!-- Font Awesome CSS -->
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Stylish&display=swap" rel="stylesheet">
 
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-        <script>
 
+
+        <script>
             function sign_in() {
                 let username = $("#input-username").val()
                 let password = $("#input-password").val()
@@ -127,7 +131,8 @@
                 return regExp.test(asValue);
             }
 
-            function check_dup() {
+            function check_dup()
+            {
                 let username = $("#input-username").val()
                 console.log(username)
                 if (username == "") {
@@ -161,8 +166,34 @@
                 });
             }
         </script>
-
         <style>
+            body {
+                background-color: RGBA(232, 52, 78, 0.2);
+                min-height: 100vh;
+            }
+
+            .section {
+                padding: 1rem 1.5rem;
+                max-width: 750px;
+                margin: auto;
+            }
+
+            .title {
+                font-weight: 800;
+                font-size: 5rem;
+                font-family: 'Gamja Flower', cursive;
+
+            }
+
+            .subtitle {
+                font-size: 2rem;
+                font-family: 'Stylish', sans-serif;
+            }
+
+            .is-sparta {
+                color: #e8344e !important;
+            }
+
             .button.is-sparta {
                 background-color: #e8344e;
                 border-color: transparent;
@@ -178,30 +209,8 @@
             .help {
                 color: gray;
             }
-            .body {
-                background-color: RGBA(232, 52, 78, 0.2);
-                min-height: 100vh;
-            }
+        </style>
 
-            .section {
-                padding: 1rem 1.5rem;
-                max-width: 750px;
-                margin: auto;
-            }
-
-            .title {
-                font-weight: 800;
-                font-size: 5rem;
-            }
-
-            .subtitle {
-                font-size: 2rem;
-            }
-
-            .is-sparta {
-                color: #e8344e !important;
-            }
-    </style>
     </head>
     <body>
         <section class="hero is-white">
@@ -226,14 +235,24 @@
                                     </div>
 
                                 </div>
+
                                 <p id="help-id" class="help is-hidden">아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.</p>                        <p id="help-id-login" class="help is-danger"></p>
+
+                                <p id="help-id" class="help is-hidden">아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.</p>
+                                <p id="help-id-login" class="help is-danger"></p>
+
 
                                 <div class="field">
                                     <div class="control has-icons-left">
                                         <input id="input-password" class="input" type="password" placeholder="비밀번호">
                                         <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
                                     </div>
+
                                     <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용 가능합니다.</p>
+
+                                    <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도
+                                        사용 가능합니다.</p>
+
                                 </div>
 
 
@@ -264,7 +283,10 @@
                                                    placeholder="비밀번호 재입력">
                                             <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
                                         </div>
+
                                         <p id="help-password2" class=" is-hidden">비밀번호를 다시 한 번 입력해주세요.</p>
+
+                                        <p id="help-password2" class="help is-hidden">비밀번호를 다시 한 번 입력해주세요.</p>
 
                                     </div>
                                 </div>
