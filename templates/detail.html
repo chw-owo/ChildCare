@@ -21,7 +21,20 @@
             crossorigin="anonymous"></script>
 
     <title>ChildCara 상세페이지</title>
-
+    <script>
+        function apply() {
+            let title_give = $('#apply-title').text()
+            $.ajax({
+                type: "POST",
+                url: "/detail",
+                data: {title_give:title_give},
+                success: function(response) {
+                    alert(response["msg"]);
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
     <style>
         .card {
             width: 700px;
@@ -34,16 +47,26 @@
             margin-top: 30px;
             margin-left: 750px;
         }
+        .input-group {
+            height: 20%;
+        }
+        .btn-link {
+            position: absolute;
+            margin-left: 69%;
+            top: 110px;
+        }
     </style>
 </head>
 
 <body>
+
+<button type="button" class="btn btn-link">삭제하기</button>
 <div class="card">
     <div class="input-group">
         <div class="input-group-prepend">
             <div class="input-group-text" id="btnGroupAddon">제목</div>
         </div>
-        <span type="text" class="form-control">{{title}}</span>
+        <span type="text" class="form-control" id="apply-title">{{title}}</span>
         <div class="input-group mb-3">
             <div>
                 <span class="input-group-text" id="basic-addon2">지역</span>
@@ -52,18 +75,29 @@
             <div>
                 <span class="input-group-text" id="basic-addon3">모집인원</span>
             </div>
+            {% if cur_cnt == population %}
+            <span class="form-control">모집완료</span>
+            {% else %}
             <span class="form-control">({{cur_cnt}}/{{population}})명</span>
+            {% endif %}
+        </div>
+        <div class="input-group mb-3">
+            <div>
+                <span class="input-group-text" id="basic-addon4">나이</span>
+            </div>
+            <span class="form-control">{{age}}</span>
+            <div>
+                <span class="input-group-text" id="basic-addon5">전화번호</span>
+            </div>
+            <span class="form-control">{{phone}}</span>
 
         </div>
         <div class="card-body">
-            <p class="card-text">{{desc}}</p>
+            <p class="card-text">{{details}}</p>
         </div>
     </div>
 </div>
-<div style="float:left;">
-    <button class="btn-primary">신청하기</button>
-</div>
-
+<button onclick="apply()" class="btn-primary">신청하기</button>
 </body>
 
 </html>
