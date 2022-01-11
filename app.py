@@ -7,8 +7,6 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-#=============================================
-
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
@@ -66,31 +64,9 @@ def apply():
 
     return jsonify({'msg': msg})
 
-## 신청하기
-@app.route('/detail', methods=['POST'])
-def apply():
-    title_receive = request.form['title_give']
-
-    board = db.childcare.find_one({'title':title_receive})
-
-    cur_cnt = int(board['cur_cnt'])
-    max_cnt = int(board['population'])
-    msg = ""
-
-    if cur_cnt == max_cnt:
-        msg = "모집이 완료된 글 입니다."
-    else:
-        cur_cnt = cur_cnt + 1
-        print(cur_cnt)
-        cur_cnt = str(cur_cnt)
-        print(cur_cnt)
-        db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
-        msg = "신청이 완료 되었습니다!"
-
-    return jsonify({'msg': msg})
-
 @app.route('/detail', methods=['GET'])
-def read_reviews():
+
+def detail():
     board_title = request.args.get('title')
     board_info = db.childcare.find_one({'title': board_title}, {'_id': False})
     token_receive = request.cookies.get('mytoken')
@@ -106,7 +82,6 @@ def read_reviews():
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return render_template('index.html')
-
 
 @app.route('/postingPage', methods=['POST'])
 def save_post():
@@ -128,6 +103,8 @@ def save_post():
     age_receive = request.form["age_give"]
     location_receive = request.form["location_give"]
     details_receive = request.form["details_give"]
+
+
 
     doc = {
         "post_info": post_info_receive,
