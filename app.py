@@ -7,8 +7,6 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-#=============================================
-
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
@@ -67,7 +65,8 @@ def apply():
     return jsonify({'msg': msg})
 
 @app.route('/detail', methods=['GET'])
-def read_reviews():
+
+def detail():
     board_title = request.args.get('title')
     board_info = db.childcare.find_one({'title': board_title}, {'_id': False})
     token_receive = request.cookies.get('mytoken')
@@ -83,7 +82,6 @@ def read_reviews():
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return render_template('index.html')
-
 
 @app.route('/postingPage', methods=['POST'])
 def save_post():
@@ -105,6 +103,8 @@ def save_post():
     age_receive = request.form["age_give"]
     location_receive = request.form["location_give"]
     details_receive = request.form["details_give"]
+
+
 
     doc = {
         "post_info": post_info_receive,
