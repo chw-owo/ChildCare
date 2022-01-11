@@ -21,7 +21,20 @@
             crossorigin="anonymous"></script>
 
     <title>ChildCara 상세페이지</title>
-
+    <script>
+        function apply() {
+            let title_give = $('#apply-title').text()
+            $.ajax({
+                type: "POST",
+                url: "/detail",
+                data: {title_give:title_give},
+                success: function(response) {
+                    alert(response["msg"]);
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
     <style>
         .card {
             width: 700px;
@@ -53,7 +66,7 @@
         <div class="input-group-prepend">
             <div class="input-group-text" id="btnGroupAddon">제목</div>
         </div>
-        <span type="text" class="form-control">{{title}}</span>
+        <span type="text" class="form-control" id="apply-title">{{title}}</span>
         <div class="input-group mb-3">
             <div>
                 <span class="input-group-text" id="basic-addon2">지역</span>
@@ -84,7 +97,7 @@
         </div>
     </div>
 </div>
-<button class="btn-primary">신청하기</button>
+<button onclick="apply()" class="btn-primary">신청하기</button>
 </body>
 
 </html>
