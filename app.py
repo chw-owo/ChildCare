@@ -24,7 +24,8 @@ def home():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        return render_template('mainPage.html')
+        user_info = db.users.find_one({"username":payload["id"]})
+        return render_template('mainPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -32,7 +33,15 @@ def home():
 
 @app.route('/postingPage')
 def post():
-    return render_template('postingPage.html')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+        return render_template('postingPage.html', user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return render_template('index.html')
 
 ## 신청하기
 @app.route('/detail', methods=['POST'])
@@ -59,10 +68,21 @@ def apply():
 
 @app.route('/detail', methods=['GET'])
 def read_reviews():
-    board_info = db.childcare.find_one({'title': '@@아파트 아이 품앗이'}, {'_id': False})
-    temp_cnt = 1
-    return render_template('detail.html', title=board_info['title'],location=board_info['location'], cur_cnt=temp_cnt, population=board_info['population'],desc=board_info['details'])
+    board_title = request.args.get('title')
+    board_info = db.childcare.find_one({'title': board_title}, {'_id': False})
+    token_receive = request.cookies.get('mytoken')
 
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username":payload["id"]})
+        return render_template('detail.html', title=board_info['title'], location=board_info['location'],
+                               cur_cnt=board_info['cur_cnt'], population=board_info['population'], desc=board_info['details'],
+                               post_info=board_info['post_info'], user_info=user_info)
+
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return render_template('index.html')
     #board_title = request.args.get('title')
     #board_info = db.childcare.find_one({'title': '@@아파트'}, {'_id': False})
     #return render_template('detail.html', title=board_info['title'],location=board_info['location'], population=board_info['population'],details=board_info['details'],cur_cnt=board_info['cur_cnt'], age=board_info['age'],phone=board_info['phone'])
@@ -70,6 +90,18 @@ def read_reviews():
 
 @app.route('/postingPage', methods=['POST'])
 def save_post():
+
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return render_template('index.html')
+
+    post_info_receive = request.form["post_info_give"]
     title_receive = request.form["title_give"]
     phone_receive = request.form["phone_give"]
     population_receive = request.form["population_give"]
@@ -78,6 +110,7 @@ def save_post():
     details_receive = request.form["details_give"]
 
     doc = {
+        "post_info": post_info_receive,
         "title":title_receive,
         "phone":phone_receive,
         "population":population_receive,
@@ -88,10 +121,13 @@ def save_post():
     }
 
     db.childcare.insert_one(doc)
-    return jsonify({"msg":"게시글이 등록되었습니다"})
+
+
+    return render_template('postingPage.html', user_info=user_info)
 
 @app.route('/postingPage', methods=['DELETE'])
 def delete_post():
+    # if user_info == user_info
     post_receive = request.form["post_give"]
     title_receive = request.form["title_give"]
     phone_receive = request.form["phone_give"]
