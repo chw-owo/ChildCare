@@ -83,10 +83,6 @@ def read_reviews():
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return render_template('index.html')
-    #board_title = request.args.get('title')
-    #board_info = db.childcare.find_one({'title': '@@아파트'}, {'_id': False})
-    #return render_template('detail.html', title=board_info['title'],location=board_info['location'], population=board_info['population'],details=board_info['details'],cur_cnt=board_info['cur_cnt'], age=board_info['age'],phone=board_info['phone'])
-
 
 @app.route('/postingPage', methods=['POST'])
 def save_post():
@@ -125,27 +121,12 @@ def save_post():
 
     return render_template('postingPage.html', user_info=user_info)
 
-@app.route('/postingPage', methods=['DELETE'])
+@app.route('/detail', methods=['DELETE'])
 def delete_post():
-    # if user_info == user_info
-    post_receive = request.form["post_give"]
-    title_receive = request.form["title_give"]
-    phone_receive = request.form["phone_give"]
-    population_receive = request.form["population_give"]
-    age_receive = request.form["age_give"]
-    location_receive = request.form["locationpost_give"]
-    details_receive = request.form["details_give"]
 
-    doc = {
-        "post": post_receive,
-        "title": title_receive,
-        "phone": phone_receive,
-        "population": population_receive,
-        "age": age_receive,
-        "location": location_receive,
-        "details": details_receive,
-    }
-    db.childcare.insert_one(doc)
+    title_receive = request.form["title_give"]
+    db.childcare.delete_one({"title":title_receive})
+
     return jsonify({"msg":"게시글이 삭제되었습니다"})
 
 @app.route('/login')

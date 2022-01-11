@@ -35,6 +35,18 @@
                 }
             })
         }
+        function delete_post(){
+            let title = $('#apply-title').text()
+            $.ajax({
+                type: "DELETE",
+                url: "/detail",
+                data: {title_give:title},
+                success: function(response) {
+                    alert(response["msg"]);
+                    window.location.href="/";
+                }
+            })
+        }
     </script>
     <style>
         .card {
@@ -61,8 +73,8 @@
 
 <body>
 
-{%if user_info.username == post_id %}
-    <button type="button" class="btn btn-link">삭제하기</button>
+{%if user_info.username == post_info %}
+    <button type="button" class="btn btn-link" onclick="delete_post()">삭제하기</button>
 {% endif %}
 <div class="card">
     <div class="input-group">
