@@ -22,7 +22,7 @@ def home():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username":payload["id"]})
+        user_info = db.users.find_one({"id":payload["id"]})
         return render_template('mainPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -34,7 +34,7 @@ def post():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
         return render_template('postingPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -57,7 +57,7 @@ def apply():
     else:
         token_receive = request.cookies.get('mytoken')
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        apply_name = db.users.find_one({"username":payload["id"]})['username']
+        apply_name = db.users.find_one({"id":payload["id"]})['id']
         apply_list = board['apply_info']
         apply_list.append(apply_name)
         cur_cnt = cur_cnt + 1
@@ -77,7 +77,7 @@ def detail():
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username":payload["id"]})
+        user_info = db.users.find_one({"id":payload["id"]})
         return render_template('detail.html', title=board_info['title'], location=board_info['location'],
                                cur_cnt=board_info['cur_cnt'], population=board_info['population'], desc=board_info['details'],
                                age=board_info['age'], phone=board_info['phone'],
@@ -114,7 +114,7 @@ def save_post():
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:

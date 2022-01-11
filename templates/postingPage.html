@@ -48,7 +48,7 @@
 <script>
     function save_post() {
 
-        let post_info = "{{ user_info.username }}"
+        let post_info = "{{ user_info.id }}"
         let title = $("#title").val()
         let phone = $("#phone").val()
         let population = $("#population").val()
@@ -98,7 +98,7 @@
 
     <section class="hero is-warning is-bold">
       <div class = "title-id" >
-          안녕하세요 {{ user_info.username }}님!
+          안녕하세요 {{ user_info.id }}님!
       </div>
       <div class="hero-body">
           <div class="title-box">
