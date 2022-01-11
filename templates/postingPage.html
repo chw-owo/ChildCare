@@ -69,12 +69,12 @@
                     details_give: details
                 },
                 success: function(response){
-                    alert(response["msg"])
-                    window.location.href="/detail"
+                    alert(response["업로드가 완료되었습니다!"])
+                    window.location.href="/detail?title="+title
                 }
             })
         }
-{#        function delete_post(){
+{        function delete_post(){
             $.ajax({
                 type:"DELETE",
                 url:'/postingPage',
@@ -86,7 +86,7 @@
                     window.location.href="/mainPage"
                 }
             });
-        }#}
+        }}
 
 </script>
 <body>
