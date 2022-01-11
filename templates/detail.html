@@ -34,6 +34,18 @@
                 }
             })
         }
+        function delete_post(){
+            let title = $('#apply-title').text()
+            $.ajax({
+                type: "DELETE",
+                url: "/detail",
+                data: {title_give:title},
+                success: function(response) {
+                    alert(response["msg"]);
+                    window.location.href="/";
+                }
+            })
+        }
     </script>
     <style>
         .card {
@@ -60,14 +72,22 @@
 
 <body>
 
-<button type="button" class="btn btn-link">삭제하기</button>
+{%if user_info.username == post_info %}
+    <button type="button" class="btn btn-link" onclick="delete_post()">삭제하기</button>
+{% endif %}
+
 <div class="card">
     <div class="input-group">
         <div class="input-group-prepend">
             <div class="input-group-text" id="btnGroupAddon">제목</div>
         </div>
         <span type="text" class="form-control" id="apply-title">{{title}}</span>
-        <div class="input-group mb-3">
+
+        <div class="input-group mb-4">
+            <div>
+                <span class="input-group-text" id="basic-addon2">작성자</span>
+            </div>
+                <span class="form-control">{{post_info}}</span>
             <div>
                 <span class="input-group-text" id="basic-addon2">지역</span>
             </div>
@@ -97,7 +117,18 @@
         </div>
     </div>
 </div>
-<button onclick="apply()" class="btn-primary">신청하기</button>
+
+{%if user_info.username == post_info %}
+    <button onclick="window.location.href='/postingPage'" class="btn-primary">수정하기</button>
+{% else %}
+    <button onclick="apply()" class="btn-primary">신청하기</button>
+{% endif %}
+
+<button class="btn-primary" onclick="window.location.href='/'">메인으로</button>
+
+
 </body>
 
+
 </html>
+
