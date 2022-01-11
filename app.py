@@ -58,10 +58,9 @@ def apply():
     return jsonify({'msg': msg})
 
 @app.route('/detail', methods=['GET'])
-def read_reviews():
-    board_title = request.args.get('title')
-    board_info = db.childcare.find_one({'title': '@@아파트'}, {'_id': False})
-
+def detail():
+    para = request.args.to_dict()['title']
+    board_info = db.childcare.find_one({'title': para}, {'_id': False})
     return render_template('detail.html', title=board_info['title'],location=board_info['location'], population=board_info['population'],details=board_info['details'],cur_cnt=board_info['cur_cnt'], age=board_info['age'],phone=board_info['phone'])
 
 @app.route('/postingPage', methods=['POST'])
@@ -72,6 +71,8 @@ def save_post():
     age_receive = request.form["age_give"]
     location_receive = request.form["location_give"]
     details_receive = request.form["details_give"]
+
+
 
     doc = {
         "title":title_receive,
