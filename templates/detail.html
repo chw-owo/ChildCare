@@ -27,22 +27,37 @@
             $.ajax({
                 type: "POST",
                 url: "/detail",
-                data: {title_give:title_give},
-                success: function(response) {
+                data: {title_give: title_give},
+                success: function (response) {
                     alert(response["msg"]);
                     window.location.reload();
                 }
             })
         }
-        function delete_post(){
+
+        function cancel() {
+            let username = "{{ user_info.username }}"
+            let title_give = $('#apply-title').text()
+            $.ajax({
+                type: "UPDATE",
+                url: "/detail",
+                data: {title_give: title_give, cancel_name: username},
+                success: function (response) {
+                    alert(response["msg"]);
+                    window.location.reload();
+                }
+            })
+        }
+
+        function delete_post() {
             let title = $('#apply-title').text()
             $.ajax({
                 type: "DELETE",
                 url: "/detail",
-                data: {title_give:title},
-                success: function(response) {
+                data: {title_give: title},
+                success: function (response) {
                     alert(response["msg"]);
-                    window.location.href="/";
+                    window.location.href = "/";
                 }
             })
         }
@@ -59,10 +74,18 @@
             margin-top: 30px;
             margin-left: 750px;
         }
+
         .input-group {
             height: 20%;
         }
-        .btn-link {
+
+        .btn-update {
+            position: absolute;
+            margin-left: 63%;
+            top: 110px;
+        }
+
+        .btn-delete {
             position: absolute;
             margin-left: 69%;
             top: 110px;
@@ -73,9 +96,9 @@
 <body>
 
 {%if user_info.username == post_info %}
-    <button type="button" class="btn btn-link" onclick="delete_post()">삭제하기</button>
+<button type="button" class="btn btn-update btn-link" onclick="window.location.href='/postingPage'">수정하기</button>
+<button type="button" class="btn btn-delete btn-link" onclick="delete_post()">삭제하기</button>
 {% endif %}
-
 <div class="card">
     <div class="input-group">
         <div class="input-group-prepend">
@@ -85,9 +108,9 @@
 
         <div class="input-group mb-4">
             <div>
-                <span class="input-group-text" id="basic-addon2">작성자</span>
+                <span class="input-group-text" id="basic-addon1">작성자</span>
             </div>
-                <span class="form-control">{{post_info}}</span>
+            <span class="form-control">{{post_info}}</span>
             <div>
                 <span class="input-group-text" id="basic-addon2">지역</span>
             </div>
@@ -118,14 +141,18 @@
     </div>
 </div>
 
-{%if user_info.username == post_info %}
-    <button onclick="window.location.href='/postingPage'" class="btn-primary">수정하기</button>
-{% else %}
+{% set check = {'dupli': True} %}
+{% for na in apply_info %}
+    {% if (user_info.username == na) and (check.update({'dupli': False})) %}
+    {% endif %}
+{% endfor %}
+{% if check.dupli == True %}
     <button onclick="apply()" class="btn-primary">신청하기</button>
+{% else %}
+    <button onclick="cancel()" class="btn-primary">취소하기</button>
 {% endif %}
 
 <button class="btn-primary" onclick="window.location.href='/'">메인으로</button>
-
 
 </body>
 
