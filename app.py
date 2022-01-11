@@ -55,17 +55,21 @@ def apply():
     if cur_cnt == max_cnt:
         msg = "모집이 완료된 글 입니다."
     else:
+        token_receive = request.cookies.get('mytoken')
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        apply_name = db.users.find_one({"username":payload["id"]})['username']
+        apply_list = board['apply_info']
+        apply_list.append(apply_name)
         cur_cnt = cur_cnt + 1
-        print(cur_cnt)
         cur_cnt = str(cur_cnt)
-        print(cur_cnt)
         db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
+        db.childcare.update_one({'title': title_receive}, {'$set': {'apply_info': apply_list}})
+
         msg = "신청이 완료 되었습니다!"
 
     return jsonify({'msg': msg})
 
 @app.route('/detail', methods=['GET'])
-
 def detail():
     board_title = request.args.get('title')
     board_info = db.childcare.find_one({'title': board_title}, {'_id': False})
@@ -76,12 +80,32 @@ def detail():
         user_info = db.users.find_one({"username":payload["id"]})
         return render_template('detail.html', title=board_info['title'], location=board_info['location'],
                                cur_cnt=board_info['cur_cnt'], population=board_info['population'], desc=board_info['details'],
-                               post_info=board_info['post_info'], user_info=user_info)
+                               age=board_info['age'], phone=board_info['phone'],
+                               post_info=board_info['post_info'], user_info=user_info, apply_info=board_info['apply_info'])
 
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return render_template('index.html')
+
+@app.route('/detail', methods=['UPDATE'])
+def cancel():
+    title_receive = request.form["title_give"]
+    cancel_name = request.form["cancel_name"]
+
+    board = db.childcare.find_one({'title': title_receive})
+    cur_cnt = int(board['cur_cnt'])
+    apply_list = board['apply_info']
+
+    apply_list.remove(cancel_name)
+
+    cur_cnt = cur_cnt - 1;
+    cur_cnt = str(cur_cnt)
+
+    db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
+    db.childcare.update_one({'title': title_receive}, {'$set': {'apply_info': apply_list}})
+
+    return jsonify({"msg":"신청이 취소되었습니다!"})
 
 @app.route('/postingPage', methods=['POST'])
 def save_post():
@@ -104,8 +128,6 @@ def save_post():
     location_receive = request.form["location_give"]
     details_receive = request.form["details_give"]
 
-
-
     doc = {
         "post_info": post_info_receive,
         "title":title_receive,
@@ -114,7 +136,8 @@ def save_post():
         "age":age_receive,
         "location":location_receive,
         "details":details_receive,
-        "cur_cnt": "0"
+        "cur_cnt": "0",
+        "apply_info": []
     }
 
     db.childcare.insert_one(doc)
