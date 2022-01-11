@@ -21,9 +21,10 @@ def post():
 @app.route('/detail', methods=['GET'])
 def read_reviews():
     board_title = request.args.get('title')
-    board_info = db.childcare.find_one({'title': '@@아파트 아이 품앗이'}, {'_id': False})
+    board_info = db.childcare.find_one({'title': '@@아파트'}, {'_id': False})
 
-    return render_template('detail.html', title=board_info['title'],location=board_info['location'], cur_cnt=board_info['cur_cnt'], population=board_info['population'],desc=board_info['desc'])
+    print(board_info)
+    return render_template('detail.html', title=board_info['title'],location=board_info['location'], population=board_info['population'],details=board_info['details'],cur_cnt=board_info['cur_cnt'], age=board_info['age'],phone=board_info['phone'])
 
 
 @app.route('/postingPage', methods=['POST'])
@@ -41,7 +42,8 @@ def save_post():
         "population":population_receive,
         "age":age_receive,
         "location":location_receive,
-        "details":details_receive
+        "details":details_receive,
+        "cur_cnt": "0"
     }
 
     db.childcare.insert_one(doc)
@@ -64,7 +66,7 @@ def delete_post():
         "population": population_receive,
         "age": age_receive,
         "location": location_receive,
-        "details": details_receive
+        "details": details_receive,
     }
     db.childcare.insert_one(doc)
     return jsonify({"msg":"게시글이 삭제되었습니다"})
