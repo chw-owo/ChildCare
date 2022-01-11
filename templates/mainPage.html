@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+        function sign_out() {
+                $.removeCookie('mytoken', {path: '/'});
+                alert('로그아웃!')
+                window.location.href = "/login"
+            }
+    </script>
 </head>
+
+
 <body>
     <h1>메인 페이지</h1>
     <button onclick="window.location.href='/postingPage'">모집글 올리기</button>
-    <button onclick="window.location.href='/login'">로그인하기</button>
+    <button onclick="sign_out()">로그아웃하기</button>
 </body>
 </html>
