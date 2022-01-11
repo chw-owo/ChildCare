@@ -34,10 +34,20 @@
             margin-top: 30px;
             margin-left: 750px;
         }
+        .input-group {
+            height: 20%;
+        }
+        .btn-link {
+            position: absolute;
+            margin-left: 69%;
+            top: 110px;
+        }
     </style>
 </head>
 
 <body>
+
+<button type="button" class="btn btn-link">삭제하기</button>
 <div class="card">
     <div class="input-group">
         <div class="input-group-prepend">
@@ -55,8 +65,19 @@
             <span class="form-control">({{cur_cnt}}/{{population}})명</span>
 
         </div>
+        <div class="input-group mb-3">
+            <div>
+                <span class="input-group-text" id="basic-addon4">나이</span>
+            </div>
+            <span class="form-control">{{age}}</span>
+            <div>
+                <span class="input-group-text" id="basic-addon5">전화번호</span>
+            </div>
+            <span class="form-control">{{phone}}</span>
+
+        </div>
         <div class="card-body">
-            <p class="card-text">{{desc}}</p>
+            <p class="card-text">{{details}}</p>
         </div>
     </div>
 </div>
