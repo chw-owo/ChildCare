@@ -34,14 +34,35 @@ def home():
 def post():
     return render_template('postingPage.html')
 
+## 신청하기
+@app.route('/detail', methods=['POST'])
+def apply():
+    title_receive = request.form['title_give']
+
+    board = db.childcare.find_one({'title':title_receive})
+
+    cur_cnt = int(board['cur_cnt'])
+    max_cnt = int(board['population'])
+    msg = ""
+
+    if cur_cnt == max_cnt:
+        msg = "모집이 완료된 글 입니다."
+    else:
+        cur_cnt = cur_cnt + 1
+        print(cur_cnt)
+        cur_cnt = str(cur_cnt)
+        print(cur_cnt)
+        db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
+        msg = "신청이 완료 되었습니다!"
+
+    return jsonify({'msg': msg})
+
 @app.route('/detail', methods=['GET'])
 def read_reviews():
-    #board_title = request.args.get('title')
+    board_title = request.args.get('title')
+    board_info = db.childcare.find_one({'title': '@@아파트'}, {'_id': False})
 
-    board_info = db.childcare.find_one({'title': '@@아파트 아이 품앗이'}, {'_id': False})
-    temp_cnt = 1
-    return render_template('detail.html', title=board_info['title'],location=board_info['location'], cur_cnt=temp_cnt, population=board_info['population'],desc=board_info['details'])
-
+    return render_template('detail.html', title=board_info['title'],location=board_info['location'], population=board_info['population'],details=board_info['details'],cur_cnt=board_info['cur_cnt'], age=board_info['age'],phone=board_info['phone'])
 
 @app.route('/postingPage', methods=['POST'])
 def save_post():
@@ -58,7 +79,8 @@ def save_post():
         "population":population_receive,
         "age":age_receive,
         "location":location_receive,
-        "details":details_receive
+        "details":details_receive,
+        "cur_cnt": "0"
     }
 
     db.childcare.insert_one(doc)
@@ -81,7 +103,7 @@ def delete_post():
         "population": population_receive,
         "age": age_receive,
         "location": location_receive,
-        "details": details_receive
+        "details": details_receive,
     }
     db.childcare.insert_one(doc)
     return jsonify({"msg":"게시글이 삭제되었습니다"})
