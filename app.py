@@ -26,7 +26,7 @@ def home():
         user_info = db.users.find_one({"id":payload["id"]})
         return render_template('mainPage.html', user_info=user_info, posts=posts)
     except jwt.ExpiredSignatureError:
-        return render_template('mainPage.html', posts=posts) #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return render_template('mainPage.html',  user_info=0, posts=posts) #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return render_template('mainPage.html', user_info=0, posts=posts)
 
