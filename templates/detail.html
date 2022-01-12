@@ -35,7 +35,7 @@
           rel="stylesheet">
     <script>
         function apply() {
-            let username = "{{ user_info.username }}"
+            let username = "{{ user_info.id }}"
             let postname = "{{post_info}}"
             if(username == postname) alert("본인이 신청할 수 없습니다!");
             else {
@@ -143,7 +143,7 @@
         <h3 class="subtitle ">육아 품앗이 매칭 플랫폼</h3>
     </div>
 </section>
-{%if user_info.username == post_info %}
+{%if user_info.id == post_info %}
 <button type="button" class="btn btn-update btn-link" onclick="window.location.href='/postingPage'">수정하기</button>
 <button type="button" class="btn btn-delete btn-link" onclick="delete_post()">삭제하기</button>
 {% endif %}
@@ -192,7 +192,7 @@
 
     {% set check = {'dupli': True} %}
     {% for na in apply_info %}
-    {% if (user_info.username == na) and (check.update({'dupli': False})) %}
+    {% if (user_info.id == na) and (check.update({'dupli': False})) %}
 
     {% endif %}
     {% endfor %}
