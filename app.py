@@ -25,10 +25,12 @@ def home():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"id":payload["id"]})
         return render_template('mainPage.html', user_info=user_info, posts=posts)
+
     except jwt.ExpiredSignatureError:
         return render_template('mainPage.html',  user_info=0, posts=posts) #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return render_template('mainPage.html', user_info=0, posts=posts)
+
 
 @app.route('/postingPage')
 def post():
