@@ -1,3 +1,5 @@
+import json
+
 from pymongo import MongoClient
 import jwt
 import datetime
@@ -11,8 +13,8 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
-
-client = MongoClient('localhost', 27017)
+#client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://test:test@3.34.142.52', 27017)
 db = client.childcare
 
 SECRET_KEY = 'ChildCare'
@@ -44,6 +46,7 @@ def post():
     except jwt.exceptions.DecodeError:
         return render_template('mainPage.html',user_info=0)
 
+
 ## 신청하기
 @app.route('/detail', methods=['POST'])
 def apply():
@@ -68,6 +71,8 @@ def apply():
         db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
         db.childcare.update_one({'title': title_receive}, {'$set': {'apply_info': apply_list}})
 
+        return jsonify({"msg": "신청이 완료되었습니다!"})
+
 @app.route('/detail', methods=['GET'])
 def detail():
     board_title = request.args.get('title')
@@ -78,7 +83,7 @@ def detail():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"id":payload["id"]})
         return render_template('detail.html', title=board_info['title'], location=board_info['location'],
-                               cur_cnt=board_info['cur_cnt'], population=board_info['population'], desc=board_info['details'],
+                               cur_cnt=board_info['cur_cnt'], population=board_info['population'], details=board_info['details'],
                                age=board_info['age'], phone=board_info['phone'],
                                post_info=board_info['post_info'], user_info=user_info, apply_info=board_info['apply_info'])
 
@@ -140,9 +145,58 @@ def save_post():
     }
 
     db.childcare.insert_one(doc)
-
-
     return render_template('postingPage.html', user_info=user_info)
+
+@app.route('/editPage')
+def post_forEdit():
+    token_receive = request.cookies.get('mytoken')
+    board_title = request.args.get('title')
+    board_info = db.childcare.find_one({'title': board_title}, {'_id': False})
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"id": payload["id"]})
+        return render_template('editPage.html', user_info=user_info, title=board_info["title"])
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg=""))
+    except jwt.exceptions.DecodeError:
+        return render_template('mainPage.html',user_info=0)
+
+@app.route('/editPage', methods=['POST'])
+def edit_post():
+
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"id": payload["id"]})
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return render_template('mainPage.html', user_info=0)
+
+    post_info_receive = request.form["post_info_give"]
+    title_receive = request.form["title_give"]
+    phone_receive = request.form["phone_give"]
+    population_receive = request.form["population_give"]
+    age_receive = request.form["age_give"]
+    location_receive = request.form["location_give"]
+    details_receive = request.form["details_give"]
+
+    doc = {
+        "post_info": post_info_receive,
+        "title":title_receive,
+        "phone":phone_receive,
+        "population":population_receive,
+        "age":age_receive,
+        "location":location_receive,
+        "details":details_receive,
+        "cur_cnt": "0",
+        "apply_info": []
+    }
+
+    db.childcare.update_one({'title': title_receive}, {'$set': doc})
+    return render_template('editPage.html', user_info=user_info)
+
 
 @app.route('/detail', methods=['DELETE'])
 def delete_post():
@@ -171,7 +225,7 @@ def sign_in():
          'id': username_receive,
          'exp': datetime.utcnow() + timedelta(seconds=60*60)  # 로그인 24시간 유지
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf8')
 
         return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
