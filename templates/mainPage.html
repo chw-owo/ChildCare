@@ -1,12 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+        <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!--google font 링크-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nunito&family=Ubuntu:ital,wght@0,300;1,400&display=swap" rel="stylesheet">
+
+
+    <script>
+        function toPostingPage() {
+
+            if ("{{ user_info }}"==null)
+            {
+                alert("로그인이 필요한 기능입니다!")
+                window.location.href = '/login'
+
+            }else{
+                window.location.href='/postingPage'
+
+            }
+        }
+        function toDetailPage() {
+
+            if ("{{ user_info }}"==null)
+            {
+                alert("로그인이 필요한 기능입니다!")
+                window.location.href = '/login'
+
+            }else{
+                window.location.href="/detail?title="+title
+
+            }
+        }
+    </script>
+    <style>
+        *{
+             font-family: 'Gowun Dodum';
+
+        }
+        .wrap {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            margin: auto;
+        }
+
+        .btn-primary
+        {
+            font-family: 'Gowun Dodum';
+            color: black;
+            background-color: #fffde7;
+            border: 1.5px solid #fbc02d;
+            border-radius: 5px;
+
+        }
+    </style>
 </head>
 <body>
-    <h1>메인 페이지</h1>
-    <button onclick="window.location.href='/postingPage'">모집글 올리기</button>
-    <button onclick="window.location.href='/login'">로그인하기</button>
+    <div class="wrap">
+        <h1>메인 페이지</h1>
+
+            <button class="btn-primary" onclick="toPostingPage()">모집글 올리기</button>
+            <button class="btn-primary" onclick="window.location.href='/login'">로그인하기</button>
+    </div>
+
 </body>
 </html>

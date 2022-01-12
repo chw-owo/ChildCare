@@ -27,9 +27,9 @@ def home():
         user_info = db.users.find_one({"username":payload["id"]})
         return render_template('mainPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return render_template('mainPage.html') #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('index.html', user_info=user_info)
 
 @app.route('/postingPage')
 def post():
@@ -39,32 +39,9 @@ def post():
         user_info = db.users.find_one({"username": payload["id"]})
         return render_template('postingPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
         return render_template('index.html')
-
-## 신청하기
-@app.route('/detail', methods=['POST'])
-def apply():
-    title_receive = request.form['title_give']
-
-    board = db.childcare.find_one({'title':title_receive})
-
-    cur_cnt = int(board['cur_cnt'])
-    max_cnt = int(board['population'])
-    msg = ""
-
-    if cur_cnt == max_cnt:
-        msg = "모집이 완료된 글 입니다."
-    else:
-        cur_cnt = cur_cnt + 1
-        print(cur_cnt)
-        cur_cnt = str(cur_cnt)
-        print(cur_cnt)
-        db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
-        msg = "신청이 완료 되었습니다!"
-
-    return jsonify({'msg': msg})
 
 ## 신청하기
 @app.route('/detail', methods=['POST'])
@@ -103,7 +80,7 @@ def read_reviews():
                                post_info=board_info['post_info'], user_info=user_info)
 
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
         return render_template('index.html')
 
@@ -170,7 +147,7 @@ def sign_in():
     if result is not None:
         payload = {
          'id': username_receive,
-         'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
+         'exp': datetime.utcnow() + timedelta(seconds=60*60)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
