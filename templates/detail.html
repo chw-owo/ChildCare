@@ -27,28 +27,59 @@
 
 
     <title>ChildCara 상세페이지</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+    <!-- 구글 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nunito&family=Ubuntu:ital,wght@0,300;1,400&display=swap"
+          rel="stylesheet">
     <script>
         function apply() {
+            let username = "{{ user_info.id }}"
+            let postname = "{{post_info}}"
+            if(username == postname) alert("본인이 신청할 수 없습니다!");
+            else {
             let title_give = $('#apply-title').text()
             $.ajax({
                 type: "POST",
                 url: "/detail",
-                data: {title_give:title_give},
-                success: function(response) {
+                data: {title_give: title_give},
+                success: function (response) {
+                    alert(response["msg"]);
+                    window.location.reload();
+                }
+            })}
+        }
+
+        function cancel() {
+            let username = "{{ user_info.id }}"
+            let title_give = $('#apply-title').text()
+            $.ajax({
+                type: "UPDATE",
+                url: "/detail",
+                data: {title_give: title_give, cancel_name: username},
+                success: function (response) {
                     alert(response["msg"]);
                     window.location.reload();
                 }
             })
         }
-        function delete_post(){
+
+        function delete_post() {
             let title = $('#apply-title').text()
             $.ajax({
                 type: "DELETE",
                 url: "/detail",
-                data: {title_give:title},
-                success: function(response) {
+                data: {title_give: title},
+                success: function (response) {
                     alert(response["msg"]);
-                    window.location.href="/";
+                    window.location.href = "/";
                 }
             })
         }
@@ -59,11 +90,11 @@
         }
 
         .card {
-            width: 700px;
+            width: 80%;
             height: 500px;
-            margin: auto;
-            margin-top: 150px;
-            margin-left: 450px;
+
+            margin-top: 3%;
+            margin-left: 10%;
 
             border: 2px solid #fbc02d;
         }
@@ -71,12 +102,24 @@
         .btn-primary {
             font-family: 'Gowun Dodum';
             color: white;
-            margin-top: 30px;
-            margin-left: 750px;
+            margin-top: 3%;
+            margin-left: 10%;
             background-color: #fbc02d;
             border: 2px solid #fbc02d;
             padding: 5px;
             border-radius: 5px;
+        }
+
+
+
+        .btn-ac {
+            margin-top: 2%;
+            margin-left: 45%;
+        }
+
+        .btn-main {
+            margin-top: 1%;
+            margin-left: 45%;
         }
 
         .input-group {
@@ -86,9 +129,40 @@
         .btn-link {
             font-family: 'Gowun Dodum';
             color: dimgrey;
+
+        .btn-update {
             position: absolute;
-            margin-left: 69%;
-            top: 110px;
+            margin-left: 67%;
+        }
+
+        .btn-delete {
+
+            position: absolute;
+            margin-left: 72%;
+        }
+
+        .subtitle {
+            font-family: 'Gowun Dodum';
+        }
+
+        .titleMargin {
+            margin: 100px 550px 0px 550px;
+        }
+
+        .title {
+            font-weight: 800;
+            font-family: 'Gowun Dodum';
+        }
+        .wrap {
+            width: 70%;
+            margin: auto;
+
+        }
+        body {
+            background-image: url('https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/6d/22/c4/5b6d22c401d8d2738de6.jpg');
+            background-repeat: no-repeat;
+            background-size: 600px;
+            background-position: right center;
         }
 
         .input-group-text{
@@ -105,62 +179,74 @@
 </head>
 
 <body>
-
-{%if user_info.username == post_info %}
-    <button type="button" class="btn btn-link" onclick="delete_post()">삭제하기</button>
+<section class="hero is-warning is-bold titleMargin">
+    <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
+        <h1 class="title ">Childcare Together</h1>
+        <h3 class="subtitle ">육아 품앗이 매칭 플랫폼</h3>
+    </div>
+</section>
+{%if user_info.id == post_info %}
+<button type="button" class="btn btn-update btn-link" onclick="window.location.href='/postingPage'">수정하기</button>
+<button type="button" class="btn btn-delete btn-link" onclick="delete_post()">삭제하기</button>
 {% endif %}
-
-<div class="card">
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <div class="input-group-text" id="btnGroupAddon">제목</div>
-        </div>
-        <span type="text" class="form-control" id="apply-title">{{title}}</span>
-
-        <div class="input-group mb-4">
-            <div>
-                <span class="input-group-text" id="basic-addon2">작성자</span>
+<div class="wrap">
+    <div class="card">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text" id="btnGroupAddon">제목</div>
             </div>
+            <span type="text" class="form-control" id="apply-title">{{title}}</span>
+
+            <div class="input-group mb-4">
+                <div>
+                    <span class="input-group-text" id="basic-addon1">작성자</span>
+                </div>
                 <span class="form-control">{{post_info}}</span>
-            <div>
-                <span class="input-group-text" id="basic-addon2">지역</span>
+                <div>
+                    <span class="input-group-text" id="basic-addon2">지역</span>
+                </div>
+                <span class="form-control">{{location}}</span>
+                <div>
+                    <span class="input-group-text" id="basic-addon3">모집인원</span>
+                </div>
+                {% if cur_cnt == population %}
+                <span class="form-control">모집완료</span>
+                {% else %}
+                <span class="form-control">({{cur_cnt}}/{{population}})명</span>
+                {% endif %}
             </div>
-            <span class="form-control">{{location}}</span>
-            <div>
-                <span class="input-group-text" id="basic-addon3">모집인원</span>
-            </div>
-            {% if cur_cnt == population %}
-            <span class="form-control">모집완료</span>
-            {% else %}
-            <span class="form-control">({{cur_cnt}}/{{population}})명</span>
-            {% endif %}
-        </div>
-        <div class="input-group mb-3">
-            <div>
-                <span class="input-group-text" id="basic-addon4">나이</span>
-            </div>
-            <span class="form-control">{{age}}</span>
-            <div>
-                <span class="input-group-text" id="basic-addon5">전화번호</span>
-            </div>
-            <span class="form-control">{{phone}}</span>
+            <div class="input-group mb-3">
+                <div>
+                    <span class="input-group-text" id="basic-addon4">나이</span>
+                </div>
+                <span class="form-control">{{age}}</span>
+                <div>
+                    <span class="input-group-text" id="basic-addon5">전화번호</span>
+                </div>
+                <span class="form-control">{{phone}}</span>
 
-        </div>
-        <div class="card-body">
-            <p class="card-text">{{details}}</p>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{details}}</p>
+            </div>
         </div>
     </div>
+
+    {% set check = {'dupli': True} %}
+    {% for na in apply_info %}
+    {% if (user_info.id == na) and (check.update({'dupli': False})) %}
+
+    {% endif %}
+    {% endfor %}
+    {% if check.dupli == True %}
+    <button onclick="apply()" class="btn-primary btn-ac">신청하기</button>
+    {% else %}
+    <button onclick="cancel()" class="btn-primary btn-ac">취소하기</button>
+    {% endif %}
+    <div>
+        <button class="btn-primary btn-main" onclick="window.location.href='/'">메인으로</button>
+    </div>
 </div>
-
-{%if user_info.username == post_info %}
-    <button onclick="window.location.href='/postingPage'" class="btn-primary">수정하기</button>
-{% else %}
-    <button onclick="apply()" class="btn-primary">신청하기</button>
-{% endif %}
-
-<button class="btn-primary" onclick="window.location.href='/'">메인으로</button>
-
-
 </body>
 
 
