@@ -7,8 +7,6 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-#=============================================
-
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
@@ -22,26 +20,27 @@ SECRET_KEY = 'ChildCare'
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
+    posts = db.childcare.find({})
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username":payload["id"]})
-        return render_template('mainPage.html', user_info=user_info)
+        user_info = db.users.find_one({"id":payload["id"]})
+        return render_template('mainPage.html', user_info=user_info, posts=posts)
     except jwt.ExpiredSignatureError:
-        return render_template('mainPage.html') #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return render_template('mainPage.html', posts=posts) #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html', user_info=user_info)
+        return render_template('mainPage.html', user_info=0, posts=posts)
 
 @app.route('/postingPage')
 def post():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
         return render_template('postingPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('mainPage.html',user_info=0)
 
 ## 신청하기
 @app.route('/detail', methods=['POST'])
@@ -57,33 +56,53 @@ def apply():
     if cur_cnt == max_cnt:
         msg = "모집이 완료된 글 입니다."
     else:
+        token_receive = request.cookies.get('mytoken')
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        apply_name = db.users.find_one({"id":payload["id"]})['id']
+        apply_list = board['apply_info']
+        apply_list.append(apply_name)
         cur_cnt = cur_cnt + 1
-        print(cur_cnt)
         cur_cnt = str(cur_cnt)
-        print(cur_cnt)
         db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
-        msg = "신청이 완료 되었습니다!"
-
-    return jsonify({'msg': msg})
+        db.childcare.update_one({'title': title_receive}, {'$set': {'apply_info': apply_list}})
 
 @app.route('/detail', methods=['GET'])
-def read_reviews():
+def detail():
     board_title = request.args.get('title')
     board_info = db.childcare.find_one({'title': board_title}, {'_id': False})
     token_receive = request.cookies.get('mytoken')
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username":payload["id"]})
+        user_info = db.users.find_one({"id":payload["id"]})
         return render_template('detail.html', title=board_info['title'], location=board_info['location'],
                                cur_cnt=board_info['cur_cnt'], population=board_info['population'], desc=board_info['details'],
-                               post_info=board_info['post_info'], user_info=user_info)
+                               age=board_info['age'], phone=board_info['phone'],
+                               post_info=board_info['post_info'], user_info=user_info, apply_info=board_info['apply_info'])
 
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('mainPage.html',user_info=0)
 
+@app.route('/detail', methods=['UPDATE'])
+def cancel():
+    title_receive = request.form["title_give"]
+    cancel_name = request.form["cancel_name"]
+
+    board = db.childcare.find_one({'title': title_receive})
+    cur_cnt = int(board['cur_cnt'])
+    apply_list = board['apply_info']
+
+    apply_list.remove(cancel_name)
+
+    cur_cnt = cur_cnt - 1;
+    cur_cnt = str(cur_cnt)
+
+    db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
+    db.childcare.update_one({'title': title_receive}, {'$set': {'apply_info': apply_list}})
+
+    return jsonify({"msg":"신청이 취소되었습니다!"})
 
 @app.route('/postingPage', methods=['POST'])
 def save_post():
@@ -92,11 +111,11 @@ def save_post():
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('mainPage.html', user_info=0)
 
     post_info_receive = request.form["post_info_give"]
     title_receive = request.form["title_give"]
@@ -114,7 +133,8 @@ def save_post():
         "age":age_receive,
         "location":location_receive,
         "details":details_receive,
-        "cur_cnt": "0"
+        "cur_cnt": "0",
+        "apply_info": []
     }
 
     db.childcare.insert_one(doc)
@@ -142,7 +162,7 @@ def sign_in():
     password_receive = request.form['password_give']
 
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-    result = db.users.find_one({'username': username_receive, 'password': pw_hash})
+    result = db.users.find_one({'id': username_receive, 'pw': pw_hash})
 
     if result is not None:
         payload = {
@@ -163,12 +183,8 @@ def sign_up():
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
-        "username": username_receive,                               # 아이디
-        "password": password_hash,                                  # 비밀번호
-        "profile_name": username_receive,                           # 프로필 이름 기본값은 아이디
-        "profile_pic": "",                                          # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png", # 프로필 사진 기본 이미지
-        "profile_info": ""                                          # 프로필 한 마디
+        "id": username_receive,                               # 아이디
+        "pw": password_hash                                  # 비밀번호
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
@@ -176,7 +192,7 @@ def sign_up():
 @app.route('/sign_up/check_dup', methods=['POST'])
 def check_dup():
     username_receive = request.form['username_give']
-    exists = bool(db.users.find_one({"username": username_receive}))
+    exists = bool(db.users.find_one({"id": username_receive}))
     return jsonify({'result': 'success', 'exists': exists})
 
 if __name__ == '__main__':
