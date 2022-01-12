@@ -35,6 +35,10 @@
           rel="stylesheet">
     <script>
         function apply() {
+            let username = "{{ user_info.username }}"
+            let postname = "{{post_info}}"
+            if(username == postname) alert("본인이 신청할 수 없습니다!");
+            else {
             let title_give = $('#apply-title').text()
             $.ajax({
                 type: "POST",
@@ -44,7 +48,7 @@
                     alert(response["msg"]);
                     window.location.reload();
                 }
-            })
+            })}
         }
 
         function cancel() {
