@@ -52,7 +52,7 @@
         }
 
         function cancel() {
-            let username = "{{ user_info.username }}"
+            let username = "{{ user_info.id }}"
             let title_give = $('#apply-title').text()
             $.ajax({
                 type: "UPDATE",
@@ -193,6 +193,7 @@
     {% set check = {'dupli': True} %}
     {% for na in apply_info %}
     {% if (user_info.username == na) and (check.update({'dupli': False})) %}
+
     {% endif %}
     {% endfor %}
     {% if check.dupli == True %}

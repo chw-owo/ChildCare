@@ -22,7 +22,7 @@ def home():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username":payload["id"]})
+        user_info = db.users.find_one({"id":payload["id"]})
         return render_template('mainPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -34,7 +34,7 @@ def post():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
         return render_template('postingPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -57,7 +57,7 @@ def apply():
     else:
         token_receive = request.cookies.get('mytoken')
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        apply_name = db.users.find_one({"username":payload["id"]})['username']
+        apply_name = db.users.find_one({"id":payload["id"]})['id']
         apply_list = board['apply_info']
         apply_list.append(apply_name)
         cur_cnt = cur_cnt + 1
@@ -77,7 +77,7 @@ def detail():
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username":payload["id"]})
+        user_info = db.users.find_one({"id":payload["id"]})
         return render_template('detail.html', title=board_info['title'], location=board_info['location'],
                                cur_cnt=board_info['cur_cnt'], population=board_info['population'], desc=board_info['details'],
                                age=board_info['age'], phone=board_info['phone'],
@@ -114,7 +114,7 @@ def save_post():
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
+        user_info = db.users.find_one({"id": payload["id"]})
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -165,7 +165,7 @@ def sign_in():
     password_receive = request.form['password_give']
 
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-    result = db.users.find_one({'username': username_receive, 'password': pw_hash})
+    result = db.users.find_one({'id': username_receive, 'pw': pw_hash})
 
     if result is not None:
         payload = {
@@ -186,12 +186,8 @@ def sign_up():
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
-        "username": username_receive,                               # 아이디
-        "password": password_hash,                                  # 비밀번호
-        "profile_name": username_receive,                           # 프로필 이름 기본값은 아이디
-        "profile_pic": "",                                          # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png", # 프로필 사진 기본 이미지
-        "profile_info": ""                                          # 프로필 한 마디
+        "id": username_receive,                               # 아이디
+        "pw": password_hash                                  # 비밀번호
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
@@ -199,7 +195,7 @@ def sign_up():
 @app.route('/sign_up/check_dup', methods=['POST'])
 def check_dup():
     username_receive = request.form['username_give']
-    exists = bool(db.users.find_one({"username": username_receive}))
+    exists = bool(db.users.find_one({"id": username_receive}))
     return jsonify({'result': 'success', 'exists': exists})
 
 if __name__ == '__main__':

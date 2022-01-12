@@ -46,56 +46,59 @@
 </head>
 
 <script>
-        function save_post(){
+    function save_post() {
 
-            let post_info = "{{ user_info.username }}"
-            let title = $("#title").val()
-            let phone= $("#phone").val()
-            let population= $("#population").val()
-            let age= $("#age").val()
-            let location= $("#location").val()
-            let details= $("#details").val()
+        let post_info = "{{ user_info.id }}"
+        let title = $("#title").val()
+        let phone = $("#phone").val()
+        let population = $("#population").val()
+        let age = $("#age").val()
+        let location = $("#location").val()
+        let details = $("#details").val()
 
 
-            $.ajax({
-                type:"POST",
-                url:'/postingPage',
-                data:{
-                    post_info_give: post_info,
-                    title_give: title,
-                    phone_give: phone,
-                    population_give: population,
-                    age_give: age,
-                    location_give: location,
-                    details_give: details
-                },
-                success: function(response){
+        $.ajax({
+            type: "POST",
+            url: '/postingPage',
+            data: {
+                post_info_give: post_info,
+                title_give: title,
+                phone_give: phone,
+                population_give: population,
+                age_give: age,
+                location_give: location,
+                details_give: details
+            },
+            success: function (response) {
 
-                    alert("업로드가 완료되었습니다!")
-                    window.location.href="/detail?title="+title
-                }
-            });
-        }
-{        function delete_post(){
-            $.ajax({
-                type:"DELETE",
-                url:'/postingPage',
-                data:{
-                    post_give: "",
-                },
-                success: function(response){
-                    alert(response["msg"])
-                    window.location.href="/mainPage"
-                }
-            });
-        }}
+                alert("업로드가 완료되었습니다!")
+                window.location.href = "/detail?title=" + title
+            }
+        });
+    }
+
+
+    function delete_post() {
+        $.ajax({
+            type: "DELETE",
+            url: '/postingPage',
+            data: {
+                post_give: "",
+            },
+            success: function (response) {
+                alert(response["msg"])
+                window.location.href = "/mainPage"
+            }
+        });
+    }
+
 
 </script>
 <body>
 
     <section class="hero is-warning is-bold">
       <div class = "title-id" >
-          안녕하세요 {{ user_info.username }}님!
+          안녕하세요 {{ user_info.id }}님!
       </div>
       <div class="hero-body">
           <div class="title-box">
