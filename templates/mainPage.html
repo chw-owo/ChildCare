@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
+
         <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -41,6 +42,15 @@
 
             }
         }
+      
+      
+     <script>
+        function sign_out() {
+                $.removeCookie('mytoken', {path: '/'});
+                alert('로그아웃!')
+                window.location.href = "/"
+            }
+     </script>
     </script>
     <style>
         *{
@@ -68,14 +78,16 @@
 
         }
     </style>
+
 </head>
+
+
 <body>
     <div class="wrap">
-        <h1>메인 페이지</h1>
 
-            <button class="btn-primary" onclick="toPostingPage()">모집글 올리기</button>
-            <button class="btn-primary" onclick="window.location.href='/login'">로그인하기</button>
-    </div>
-
+    <h1>메인 페이지</h1>
+    <button class="btn-primary" onclick="window.location.href='/postingPage'">모집글 올리기</button>
+    <button class="btn-primary" onclick="sign_out()">로그아웃하기</button>
+  </div>
 </body>
 </html>
