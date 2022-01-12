@@ -20,14 +20,17 @@ SECRET_KEY = 'ChildCare'
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
+    posts = db.childcare.find({})
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"id":payload["id"]})
-        return render_template('mainPage.html', user_info=user_info)
+        return render_template('mainPage.html', user_info=user_info, posts=posts)
+
     except jwt.ExpiredSignatureError:
-        return render_template('mainPage.html') #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return render_template('mainPage.html', posts=posts) #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('mainPage.html', user_info=0, posts=posts)
+
 
 @app.route('/postingPage')
 def post():
@@ -39,7 +42,7 @@ def post():
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('mainPage.html',user_info=0)
 
 ## 신청하기
 @app.route('/detail', methods=['POST'])
@@ -82,7 +85,25 @@ def detail():
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('mainPage.html',user_info=0)
+
+@app.route('/detail', methods=['UPDATE'])
+def cancel():
+    title_receive = request.form["title_give"]
+    cancel_name = request.form["cancel_name"]
+
+    board = db.childcare.find_one({'title': title_receive})
+    cur_cnt = int(board['cur_cnt'])
+    apply_list = board['apply_info']
+
+    apply_list.remove(cancel_name)
+
+    cur_cnt = cur_cnt - 1;
+    cur_cnt = str(cur_cnt)
+
+    db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
+    db.childcare.update_one({'title': title_receive}, {'$set': {'apply_info': apply_list}})
+
 
 @app.route('/detail', methods=['UPDATE'])
 def cancel():
@@ -114,7 +135,7 @@ def save_post():
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('mainPage.html', user_info=0)
 
     post_info_receive = request.form["post_info_give"]
     title_receive = request.form["title_give"]
