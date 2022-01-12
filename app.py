@@ -27,7 +27,7 @@ def home():
     except jwt.ExpiredSignatureError:
         return render_template('mainPage.html') #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html', user_info=user_info)
+        return render_template('index.html')
 
 @app.route('/postingPage')
 def post():
