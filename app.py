@@ -25,9 +25,9 @@ def home():
         user_info = db.users.find_one({"id":payload["id"]})
         return render_template('mainPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return render_template('mainPage.html') #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+        return render_template('index.html', user_info=user_info)
 
 @app.route('/postingPage')
 def post():
@@ -37,7 +37,7 @@ def post():
         user_info = db.users.find_one({"id": payload["id"]})
         return render_template('postingPage.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
         return render_template('index.html')
 
@@ -65,10 +65,6 @@ def apply():
         db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
         db.childcare.update_one({'title': title_receive}, {'$set': {'apply_info': apply_list}})
 
-        msg = "신청이 완료 되었습니다!"
-
-    return jsonify({'msg': msg})
-
 @app.route('/detail', methods=['GET'])
 def detail():
     board_title = request.args.get('title')
@@ -84,7 +80,7 @@ def detail():
                                post_info=board_info['post_info'], user_info=user_info, apply_info=board_info['apply_info'])
 
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
         return render_template('index.html')
 
@@ -170,7 +166,7 @@ def sign_in():
     if result is not None:
         payload = {
          'id': username_receive,
-         'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
+         'exp': datetime.utcnow() + timedelta(seconds=60*60)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
