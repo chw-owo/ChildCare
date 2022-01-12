@@ -70,24 +70,28 @@
             margin-left: 450px;
         }
 
-        .btn-primary {
+        .btn-ac {
             margin-top: 30px;
             margin-left: 750px;
         }
 
+        .btn-main {
+            margin-top: 10px;
+            margin-left: 750px;
+        }
         .input-group {
             height: 20%;
         }
 
         .btn-update {
             position: absolute;
-            margin-left: 63%;
+            margin-left: 1000px;
             top: 110px;
         }
 
         .btn-delete {
             position: absolute;
-            margin-left: 69%;
+            margin-left: 1070px;
             top: 110px;
         }
     </style>
@@ -147,13 +151,13 @@
     {% endif %}
 {% endfor %}
 {% if check.dupli == True %}
-    <button onclick="apply()" class="btn-primary">신청하기</button>
+    <button onclick="apply()" class="btn-primary btn-ac">신청하기</button>
 {% else %}
-    <button onclick="cancel()" class="btn-primary">취소하기</button>
+    <button onclick="cancel()" class="btn-primary btn-ac">취소하기</button>
 {% endif %}
-
-<button class="btn-primary" onclick="window.location.href='/'">메인으로</button>
-
+<div>
+    <button class="btn-primary btn-main" onclick="window.location.href='/'">메인으로</button>
+</div>
 </body>
 
 
