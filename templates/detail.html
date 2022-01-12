@@ -140,6 +140,7 @@
             font-family: 'Gowun Dodum';
             color: dimgrey;
 
+
         .btn-update {
             position: absolute;
             margin-left: 67%;
@@ -187,8 +188,8 @@
     </div>
 </section>
 {%if user_info.id == post_info %}
-<button type="button" class="btn btn-update btn-link" onclick="window.location.href='/postingPage'">수정하기</button>
-<button type="button" class="btn btn-delete btn-link" onclick="delete_post()">삭제하기</button>
+<button class="btn btn-update btn-link" onclick="window.location.href='/editPage?title={{ title }}'">수정하기</button>
+<button class="btn btn-delete btn-link" onclick="delete_post()">삭제하기</button>
 {% endif %}
 <div class="wrap">
     <div class="card">
