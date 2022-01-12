@@ -27,7 +27,7 @@ def home():
         return render_template('mainPage.html', user_info=user_info, posts=posts)
 
     except jwt.ExpiredSignatureError:
-        return render_template('mainPage.html', posts=posts) #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return render_template('mainPage.html',  user_info=0, posts=posts) #redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return render_template('mainPage.html', user_info=0, posts=posts)
 
@@ -86,24 +86,6 @@ def detail():
         return redirect(url_for("login", msg=""))
     except jwt.exceptions.DecodeError:
         return render_template('mainPage.html',user_info=0)
-
-@app.route('/detail', methods=['UPDATE'])
-def cancel():
-    title_receive = request.form["title_give"]
-    cancel_name = request.form["cancel_name"]
-
-    board = db.childcare.find_one({'title': title_receive})
-    cur_cnt = int(board['cur_cnt'])
-    apply_list = board['apply_info']
-
-    apply_list.remove(cancel_name)
-
-    cur_cnt = cur_cnt - 1;
-    cur_cnt = str(cur_cnt)
-
-    db.childcare.update_one({'title': title_receive}, {'$set': {'cur_cnt': cur_cnt}})
-    db.childcare.update_one({'title': title_receive}, {'$set': {'apply_info': apply_list}})
-
 
 @app.route('/detail', methods=['UPDATE'])
 def cancel():
