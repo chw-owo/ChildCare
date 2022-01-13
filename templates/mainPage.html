@@ -36,6 +36,15 @@
                 window.location.href = "/"
             }
 
+        function url_parse(post) {
+            var title = post;
+            var url = "/detail?title=";
+            title = title.replace(/#/g, "%23");
+            title = title.replace(/&/g, "%26");
+            window.location.href = url + title
+        }
+
+
     </script>
     <style>
         *{
@@ -106,7 +115,7 @@
       </div>
     {% for post in posts %}
        {% if user_info != 0 %}
-          <a class="panel-block is-active" href="./detail?title={{ post.title }}">
+          <a class="panel-block is-active" onclick="url_parse('{{post.title}}')">
        {% else %}
           <a class="panel-block is-active" onclick="toLogin()"  href="./login">
        {% endif %}
