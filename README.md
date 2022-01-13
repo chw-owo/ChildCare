@@ -4,6 +4,7 @@
 ## 0. 
 
 [![ChildCare](./static/ogimage.png)](https://youtu.be/aFWosYimem0) 
+이미지 클릭 시 유튜브 시연 영상으로 이동합니다.
 
 
 ## 1. 기획의도
